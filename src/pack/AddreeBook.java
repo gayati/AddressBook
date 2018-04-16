@@ -32,7 +32,7 @@ public class AddreeBook
 	}
 	
 	public  ArrayList<Person> list;
-	//
+
 	public  void operations() throws JsonGenerationException, JsonMappingException, IOException{
 	  
 		list = readMethod();
@@ -194,31 +194,24 @@ public class AddreeBook
 	
 	public void sortPersons()
 	{
-		class sortDetailsbyname implements Comparator<Object>
+		class sortDetailsbyname implements Comparator<Person>
 		{
 
 			@Override
-			public int compare(Object o1, Object o2) {
-				
-				Person person1 = (Person) o1;
-				Person person2 = (Person) o2;
-            
-				return person1.getPersonname().compareTo(person2.getPersonname());
+			public int compare(Person o1, Person o2) {
+			
+				return o1.getPersonname().compareTo(o2.getPersonname());
 			}	
 		}
 			
-			class sortDetailsbyzipcode implements Comparator<Object>
+			class sortDetailsbyzipcode implements Comparator<Person>
 			{
 
 				@Override
-				public int compare(Object o1, Object o2) {
-					
-					Person p1 = (Person) o1;
-					Address a1 = p1.getAdress();
-					Person p2 = (Person) o2;
-					Address a2 = p2.getAdress();
-					
-	            
+				public int compare(Person o1, Person o2) {
+				
+					Address a1 = o1.getAdress();
+					Address a2 = o2.getAdress();
 					return (a1.getZipcode() -a2.getZipcode());
 				}	
 			}
@@ -292,7 +285,7 @@ public class AddreeBook
 		return list;			 
 	}
 	
-   public void display(Person person)
+   private void display(Person person)
    {
 	   Address address = person.getAdress();
 		System.out.println("\t************ ADDRESSBOOK ***************");
