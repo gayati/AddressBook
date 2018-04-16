@@ -4,34 +4,54 @@ import java.util.Scanner;
 
 public class Utility 
 {
-static final Scanner SCANNER = new Scanner(System.in);	
+ static  Scanner scanner = new Scanner(System.in);	
 	
 	public static  int readInteger()
 	{
-		return SCANNER.nextInt();
+		
+		try {
+			return scanner.nextInt();
+		} catch (Exception e) {
+			scanner.nextLine();
+			System.out.println("Enter proper input, try again");
+			return readInteger();
+		}
 	}
 	public static String readString()
 	{
-		return SCANNER.next();
+		return scanner.next();
 	}
 	public static double readDouble()
 	{
-		return SCANNER.nextDouble();
+		try {
+			return scanner.nextDouble();
+		} catch (Exception e) {
+			scanner.nextLine();
+			System.out.println("Enter proper input, try again");
+			return readDouble();
+		}
 		
 	}
 	public static long readLong()
-	{
-		return SCANNER.nextLong();
+	{  
+		try {
+			return scanner.nextLong();
+		} catch (Exception e) {
+			scanner.nextLine();
+			System.out.println("Enter proper input, try again");
+			return readLong();
+		}
+		
 		
 	}
 	public static boolean readBoolean()
 	{
-		return SCANNER.nextBoolean();
+		return scanner.nextBoolean();
 		
 	}
 	public static char readChar()
 	{
-		return SCANNER.next().charAt(0);
+		return scanner.next().charAt(0);
 		
 	}
 

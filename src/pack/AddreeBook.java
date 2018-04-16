@@ -31,21 +31,23 @@ public class AddreeBook
 		this.filename = filename;
 	}
 	
-	public static ArrayList<Person> list= new ArrayList<>();
-	
-	public  void operations() throws JsonGenerationException, JsonMappingException, IOException
-	{	int choice =0;
+	public  ArrayList<Person> list;
+	//
+	public  void operations() throws JsonGenerationException, JsonMappingException, IOException{
+	  
+		list = readMethod();
+		int choice =0;
 		do {	
 		System.out.println("1.Add Person");
 		System.out.println("2.Edit Person");
 		System.out.println("3.Delete Person");
 		System.out.println("4.Sort Details");
-		System.out.println("5.Exist");
+		System.out.println("5.Back");
 		System.out.println("Plesae Enter your choice: ");
 		 choice = Utility.readInteger();
 		
 		switch (choice) {
-		case 1:addPerson();
+		case 1:addPerson(list);
 			   break;
         case 2:editPerson();
 			
@@ -66,27 +68,32 @@ public class AddreeBook
 	}
 	
 	
-	public void addPerson() throws JsonGenerationException, JsonMappingException, IOException
+	public void addPerson(ArrayList<Person> list) throws JsonGenerationException, JsonMappingException, IOException
 	{
 		Address adress = new Address();
 		Person person = new Person();
+		
 		System.out.println("Enter the name of person: ");
 		name = Utility.readString();	
 		person.setPersonname(name);
+		
 		System.out.println("Enter the city of person: ");
 		city = Utility.readString();
 	    adress.setCity(city);
+	    
 		System.out.println("Enter the state of person: ");
 		state  =Utility.readString();
 		adress.setState(state);
+		
 		System.out.println("Enter the zipcode");
 	    zipcode = Utility.readInteger();
 	    adress.setZipcode(zipcode);
+	    
 	    System.out.println("Enter the phonenumber: ");
 	    phonenumber = Utility.readLong();
+	    
 	    String mobilepattern = "(0/91)?[7-9][0-9]{9}";
-		boolean isValidMobile = Pattern.matches(mobilepattern,String.valueOf(phonenumber));  
-		    if(isValidMobile==false)
+		    while(Pattern.matches(mobilepattern,String.valueOf(phonenumber))==false)
 		    {
 		    	System.out.println("Please enter proper mobile number: ");
 		    	phonenumber = Utility.readLong();
@@ -97,7 +104,10 @@ public class AddreeBook
 	    System.out.println(list);
 	}
 	
-	
+	public ArrayList<Person> getList()
+	{
+		return list;
+	}
 	
 	
 	
@@ -107,11 +117,11 @@ public class AddreeBook
 			name = Utility.readString();		
 		    for(int i=0; i<list.size();i++)
 		    {
-		    	Person p = (Person)list.get(i);
+		    	Person person = (Person)list.get(i);
 		    
-		      if(p.getPersonname().equals(name))
+		      if(person.getPersonname().equals(name))
 		      {
-		    	  Address adress = p.getAdress();
+		    	  Address adress = person.getAdress();
 					System.out.println(
 							"select option what you want to edit:\n 1.City \n 3.State \n 3.Zip \n 4.MobileNumber \n 6.editAll");
 					int choice = Utility.readInteger();
@@ -136,17 +146,17 @@ public class AddreeBook
 					case 4:
 						System.out.println("Enter the mobilenumber you want to update");
 						phonenumber = Utility.readLong();
-				        p.setPhonenumber(phonenumber);
+				        person.setPhonenumber(phonenumber);
 						break;
 					default:
 						System.out.println("Invalid Choice");
 
 					}// switch
-					p.setAdress(adress);
+					person.setAdress(adress);
 					break;
 		      }
 		      }
-		              	   //list.add(p);
+		              	   
 			System.out.println(list);
 	
 }
@@ -162,10 +172,10 @@ public class AddreeBook
 		for(int i =0; i<list.size();i++)
 		{
 		 
-			Person p = list.get(i);
-		      if(p.getPersonname().equals(name))
+			Person person = list.get(i);
+		      if(person.getPersonname().equals(name))
 		      {
-		    	  list.remove(p);
+		    	  list.remove(person);
                   System.out.println("Successfully Deleted...");
                   
 				   isExit=true;
@@ -190,10 +200,10 @@ public class AddreeBook
 			@Override
 			public int compare(Object o1, Object o2) {
 				
-				Person p1 = (Person) o1;
-				Person p2 = (Person) o2;
+				Person person1 = (Person) o1;
+				Person person2 = (Person) o2;
             
-				return (p1.getPersonname().compareTo(p2.getPersonname()));
+				return person1.getPersonname().compareTo(person2.getPersonname());
 			}	
 		}
 			
@@ -211,10 +221,9 @@ public class AddreeBook
 	            
 					return (a1.getZipcode() -a2.getZipcode());
 				}	
-				
-		
 			}
 
+			
 	boolean check = true;
 	do {
 		System.out.println(
@@ -224,24 +233,14 @@ public class AddreeBook
 		case 1:
 			System.out.println("Sorting according to First Names: ");
 
-			Collections.sort(list, new sortDetailsbyname());	 
+			Collections.sort(list, new sortDetailsbyname());	
+			
 			Iterator<Person> nameIterator = list.iterator();
 
 			while (nameIterator.hasNext())
 			{
-				Person p=  (Person) nameIterator.next();
-				Address address = p.getAdress();
-				System.out.println("\t************ ADDRESSBOOK ***************");
-				System.out.println("\tFirst Name:\t" + p.getPersonname());
-				
-				 System.out.println("\tCity:\t\t" +address.getCity());
-				 System.out.println("\tState:\t\t" + address.getState());
-				 System.out.println("\tZipcode:\t" + address.getZipcode());
-				 System.out.println("\tMobile number:\t" + p.getPhonenumber());
-				
-				 System.out.println("\t***********************************************");
-				 System.out.println();
-				 System.out.println();
+				Person person=  (Person) nameIterator.next();
+				display(person);
 			}
 			break;
 			
@@ -253,20 +252,8 @@ public class AddreeBook
 			Iterator<Person> zipIterator = list.iterator();
 
 			while (zipIterator.hasNext()) {
-				Person p=  (Person) zipIterator.next();
-				Address address = p.getAdress();	
-				 System.out.println("\t************* ADDRESSBOOK ***************");
-				 System.out.println("\tFirst Name:\t" + p.getPersonname());
-				
-				 System.out.println("\tCity:\t\t" +address.getCity());
-				 System.out.println("\tState:\t\t" + address.getState());
-				 System.out.println("\tZipcode:\t" + address.getZipcode());
-				 System.out.println("\tMobile number:\t" + p.getPhonenumber());
-				
-				 System.out.println("\t***********************************************");
-				 System.out.println();
-				 System.out.println();
-
+				Person person=  (Person) zipIterator.next();
+				display(person);
 			}
 			break;
 		}
@@ -303,4 +290,22 @@ public class AddreeBook
 	    	 System.out.println("Adressbook doesnot contain data");
 	     }
 		return list;			 
-	}}
+	}
+	
+   public void display(Person person)
+   {
+	   Address address = person.getAdress();
+		System.out.println("\t************ ADDRESSBOOK ***************");
+		System.out.println("\tFirst Name:\t" + person.getPersonname());
+		
+		 System.out.println("\tCity:\t\t" +address.getCity());
+		 System.out.println("\tState:\t\t" + address.getState());
+		 System.out.println("\tZipcode:\t" + address.getZipcode());
+		 System.out.println("\tMobile number:\t" + person.getPhonenumber());
+		
+		 System.out.println("\t***********************************************");
+		 System.out.println();
+		 System.out.println();   
+   }
+
+}
